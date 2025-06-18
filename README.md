@@ -25,7 +25,7 @@ WiFi Pixie Dust — це інструмент для сканування Wi-Fi 
 
 1. Клонувати репозиторій:
    ```bash
-   git clone https://github.com/yourusername/wifipixiedust.git
+   git clone https://github.com/root616C6578/wifipixiedust.git
    cd wifipixiedust
    ```
 2. Встановити залежності:
