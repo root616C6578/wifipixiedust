@@ -36,7 +36,7 @@ WiFi Pixie Dust — це інструмент для сканування Wi-Fi 
    ```
 3. Запустити скрипт:
    ```bash
-   sudo python main.py
+   sudo python attack.py
    ```
 
 ## Використання
@@ -49,7 +49,7 @@ WiFi Pixie Dust — це інструмент для сканування Wi-Fi 
    ```
 2. Запустити скрипт:
    ```bash
-   sudo python main.py
+   sudo python attack.py
    ```
 3. Вибрати інтерфейс, мережу та тип атаки (Pixie Dust або mkd4), слідувати інструкціям у консолі.
 
@@ -69,7 +69,7 @@ Enter the number of the network to attack: 0
 
 Choose an attack method:
 1. Pixie Dust
-2. mkd4
+2. mdk4
 3. Exit
 Choose attack method: 1
 
