@@ -80,9 +80,9 @@ while True:
         option = input("Choose attack method: ")
 
         if option == '1':
-            run_pixie_dust()
+            run_pixie_dust(interface, target)
         elif option == '2':
-            run_mdk4()
+            run_mdk4(interface, target)
         elif option == '3':
             print("Exiting.")
             break
