@@ -85,6 +85,7 @@ while True:
             run_mdk4(interface, target)
         elif option == '3':
             print("Exiting.")
+            subprocess.call(shlex.split(f"sudo airmon-ng stop {interface}"))
             break
         else:
             print("Invalid option.")
